@@ -2,6 +2,7 @@ const express = require('express')
 const dotenv = require('dotenv');
 dotenv.config();
 const app = express();
+const db = require('./database.js')
 
 app.get('/', (req, res) => {
     res.send("Hi people");
@@ -13,3 +14,6 @@ app.use((req, res) => {
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => { console.log(`Server open on port ${port}`) });
+
+db.Connect();
+db.Select();
