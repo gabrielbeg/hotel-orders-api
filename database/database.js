@@ -3,20 +3,38 @@ const db = require('./dbconnector');
 
 async function AddUser(name, cpf, room_number, permission, password)
 {    
-    db.query(`INSERT INTO users (name, cpf, room_number, permission_level, password) VALUES ('${name}', '${cpf}', '${room_number}', '${permission}', '${md5(password)}')`, function(err, result)
-    {
-        if(err) throw err;
-        console.log(result)
-    });
+    return new Promise((resolve, reject) => {
+        db.query(`INSERT INTO users (name, cpf, room_number, permission_level, password) VALUES ('${name}', '${cpf}', '${room_number}', '${permission}', '${md5(password)}')`
+        ,function(err, result)
+        {
+            if(err) return reject(err);
+            return resolve(result);
+        });
+    })
+}
+
+async function LoginUser(cpf, password)
+{
+    return new Promise((resolve, reject) => {
+        db.query(`SELECT * FROM users WHERE cpf='${cpf}' AND password='${password}'`, function(err, result)
+        {
+        if(err) return reject(err)
+        return resolve(result)
+        });
+    })
+    
 }
 
 async function ListUsers()
 {    
-    db.query("SELECT * FROM users", function(err, result)
+    return new Promise((resolve, reject) => 
     {
-        if(err) throw err;
-        console.log(result)
-    });
+        db.query("SELECT * FROM users", function(err, result)
+        {
+            if(err) return reject(err);
+            return resolve(result);
+        });
+    })    
 }
 
 async function DeleteUser(id)
@@ -40,5 +58,6 @@ async function DeleteUser(id)
 module.exports = {
 AddUser,
 ListUsers,
-DeleteUser
+DeleteUser,
+LoginUser
 };
