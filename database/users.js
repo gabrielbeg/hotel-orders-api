@@ -68,4 +68,23 @@ async function DeleteUser(req, res){
     console.log(returnResult);
 }
 
-module.exports = { AddUser, ListUsers, DeleteUser, LoginUser };
+async function UpdateUserInfo(req, res)
+{
+    if(!req.body.id || !req.body.name || !req.body.cpf || !req.body.room_number || !req.body.permission_level || !req.body.password)
+    {
+        res.sendStatus(400)
+        return;
+    }
+    var returnResult;
+    await db.UpdateUserInfo(req.body.id, req.body.name, req.body.cpf, req.body.room_number, req.body.permission_level, req.body.password).then(data =>
+    {
+        returnResult = data;
+        res.json(returnResult);
+    }).catch(err => {
+        returnResult = err.message;
+        res.sendStatus(400)
+    })
+    console.log(returnResult);
+}
+
+module.exports = { AddUser, ListUsers, DeleteUser, LoginUser, UpdateUserInfo };
